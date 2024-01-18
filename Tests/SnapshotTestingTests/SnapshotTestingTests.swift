@@ -671,7 +671,7 @@ final class SnapshotTestingTests: XCTestCase {
 
             self.topLabel.text = "What's"
             self.leadingLabel.text = "the"
-            self.trailingLabel.text = "point"
+            self.trailingLabel.text = "point of it"
             self.bottomLabel.text = "?"
 
             self.topLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -889,7 +889,7 @@ final class SnapshotTestingTests: XCTestCase {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .title1)
         label.adjustsFontForContentSizeCategory = true
-        label.text = "What's the point?"
+        label.text = "What's the point of this?"
 
         allContentSizes.forEach { name, contentSize in
           assertSnapshot(
@@ -907,7 +907,7 @@ final class SnapshotTestingTests: XCTestCase {
       let label = UILabel()
       label.font = .preferredFont(forTextStyle: .title1)
       label.adjustsFontForContentSizeCategory = true
-      label.text = "What's the point?"
+      label.text = "What's the point of this?"
 
       let viewController = UIViewController()
       viewController.view.addSubview(label)
