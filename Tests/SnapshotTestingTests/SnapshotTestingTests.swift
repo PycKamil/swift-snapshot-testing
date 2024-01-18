@@ -389,7 +389,7 @@ final class SnapshotTestingTests: XCTestCase {
 
             self.topLabel.text = "What's"
             self.leadingLabel.text = "the"
-            self.trailingLabel.text = "point"
+            self.trailingLabel.text = "point of this"
             self.bottomLabel.text = "?"
 
             self.topLabel.translatesAutoresizingMaskIntoConstraints = false
