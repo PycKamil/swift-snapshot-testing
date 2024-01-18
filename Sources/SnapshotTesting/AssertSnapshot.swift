@@ -11,6 +11,8 @@ public var diffTool: String? = nil
 /// Whether or not to record all new references.
 public var isRecording = false
 
+public var isFailOnNewRecording = true
+
 /// Whether or not to record all new references.
 ///
 /// Due to a name clash in Xcode 12, this has been renamed to `isRecording`.
@@ -44,18 +46,20 @@ public func assertSnapshot<Value, Format>(
   testName: String = #function,
   line: UInt = #line
 ) {
-  let failure = verifySnapshot(
-    of: try value(),
-    as: snapshotting,
-    named: name,
-    record: recording,
-    timeout: timeout,
-    file: file,
-    testName: testName,
-    line: line
-  )
-  guard let message = failure else { return }
-  XCTFail(message, file: file, line: line)
+    let failure = verifySnapshot(
+        of: try value(),
+        as: snapshotting,
+        named: name,
+        record: recording,
+        timeout: timeout,
+        file: file,
+        testName: testName,
+        line: line
+    )
+    guard let message = failure else { return }
+    if (isFailOnNewRecording) {
+        XCTFail(message, file: file, line: line)
+      }
 }
 
 /// Asserts that a given value matches references on disk.
@@ -194,7 +198,7 @@ public func verifySnapshot<Value, Format>(
 ) -> String? {
 
   CleanCounterBetweenTestCases.registerIfNeeded()
-  let recording = recording || isRecording
+  let recording = recording || isRecording || !isFailOnNewRecording
 
   do {
     let fileUrl = URL(fileURLWithPath: "\(file)", isDirectory: false)
