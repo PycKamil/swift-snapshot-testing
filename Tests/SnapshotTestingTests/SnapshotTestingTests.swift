@@ -24,7 +24,7 @@ final class SnapshotTestingTests: XCTestCase {
   override func setUp() {
     super.setUp()
     diffTool = "ksdiff"
-    // isRecording = true
+    isRecording = true
   }
 
   override func tearDown() {
@@ -357,7 +357,7 @@ final class SnapshotTestingTests: XCTestCase {
           -> UITableViewCell
         {
           let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-          cell.textLabel?.text = "\(indexPath.row)"
+          cell.textLabel?.text = "\(indexPath.row) 123"
           return cell
         }
       }
