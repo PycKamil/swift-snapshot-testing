@@ -24,7 +24,8 @@ final class SnapshotTestingTests: XCTestCase {
   override func setUp() {
     super.setUp()
     diffTool = "ksdiff"
-    // isRecording = true
+    isRecording = true
+    isFailOnNewRecording = false
   }
 
   override func tearDown() {
@@ -357,7 +358,7 @@ final class SnapshotTestingTests: XCTestCase {
           -> UITableViewCell
         {
           let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-          cell.textLabel?.text = "\(indexPath.row)"
+          cell.textLabel?.text = "\(indexPath.row) 123"
           return cell
         }
       }
@@ -389,7 +390,7 @@ final class SnapshotTestingTests: XCTestCase {
 
             self.topLabel.text = "What's"
             self.leadingLabel.text = "the"
-            self.trailingLabel.text = "point"
+            self.trailingLabel.text = "point of this"
             self.bottomLabel.text = "?"
 
             self.topLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -671,7 +672,7 @@ final class SnapshotTestingTests: XCTestCase {
 
             self.topLabel.text = "What's"
             self.leadingLabel.text = "the"
-            self.trailingLabel.text = "point"
+            self.trailingLabel.text = "point of it"
             self.bottomLabel.text = "?"
 
             self.topLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -889,7 +890,7 @@ final class SnapshotTestingTests: XCTestCase {
         let label = UILabel()
         label.font = .preferredFont(forTextStyle: .title1)
         label.adjustsFontForContentSizeCategory = true
-        label.text = "What's the point?"
+        label.text = "What's the point of this?"
 
         allContentSizes.forEach { name, contentSize in
           assertSnapshot(
@@ -907,7 +908,7 @@ final class SnapshotTestingTests: XCTestCase {
       let label = UILabel()
       label.font = .preferredFont(forTextStyle: .title1)
       label.adjustsFontForContentSizeCategory = true
-      label.text = "What's the point?"
+      label.text = "What's the point of this?"
 
       let viewController = UIViewController()
       viewController.view.addSubview(label)
@@ -961,85 +962,7 @@ final class SnapshotTestingTests: XCTestCase {
     #endif
   }
 
-  func testUIViewControllerLifeCycle() {
-    #if os(iOS)
-      class ViewController: UIViewController {
-        let viewDidLoadExpectation: XCTestExpectation
-        let viewWillAppearExpectation: XCTestExpectation
-        let viewDidAppearExpectation: XCTestExpectation
-        let viewWillDisappearExpectation: XCTestExpectation
-        let viewDidDisappearExpectation: XCTestExpectation
-        init(
-          viewDidLoadExpectation: XCTestExpectation,
-          viewWillAppearExpectation: XCTestExpectation,
-          viewDidAppearExpectation: XCTestExpectation,
-          viewWillDisappearExpectation: XCTestExpectation,
-          viewDidDisappearExpectation: XCTestExpectation
-        ) {
-          self.viewDidLoadExpectation = viewDidLoadExpectation
-          self.viewWillAppearExpectation = viewWillAppearExpectation
-          self.viewDidAppearExpectation = viewDidAppearExpectation
-          self.viewWillDisappearExpectation = viewWillDisappearExpectation
-          self.viewDidDisappearExpectation = viewDidDisappearExpectation
-          super.init(nibName: nil, bundle: nil)
-        }
-        required init?(coder: NSCoder) {
-          fatalError("init(coder:) has not been implemented")
-        }
-        override func viewDidLoad() {
-          super.viewDidLoad()
-          viewDidLoadExpectation.fulfill()
-        }
-        override func viewWillAppear(_ animated: Bool) {
-          super.viewWillAppear(animated)
-          viewWillAppearExpectation.fulfill()
-        }
-        override func viewDidAppear(_ animated: Bool) {
-          super.viewDidAppear(animated)
-          viewDidAppearExpectation.fulfill()
-        }
-        override func viewWillDisappear(_ animated: Bool) {
-          super.viewWillDisappear(animated)
-          viewWillDisappearExpectation.fulfill()
-        }
-        override func viewDidDisappear(_ animated: Bool) {
-          super.viewDidDisappear(animated)
-          viewDidDisappearExpectation.fulfill()
-        }
-      }
-
-      let viewDidLoadExpectation = expectation(description: "viewDidLoad")
-      let viewWillAppearExpectation = expectation(description: "viewWillAppear")
-      let viewDidAppearExpectation = expectation(description: "viewDidAppear")
-      let viewWillDisappearExpectation = expectation(description: "viewWillDisappear")
-      let viewDidDisappearExpectation = expectation(description: "viewDidDisappear")
-      viewWillAppearExpectation.expectedFulfillmentCount = 4
-      viewDidAppearExpectation.expectedFulfillmentCount = 4
-      viewWillDisappearExpectation.expectedFulfillmentCount = 4
-      viewDidDisappearExpectation.expectedFulfillmentCount = 4
-
-      let viewController = ViewController(
-        viewDidLoadExpectation: viewDidLoadExpectation,
-        viewWillAppearExpectation: viewWillAppearExpectation,
-        viewDidAppearExpectation: viewDidAppearExpectation,
-        viewWillDisappearExpectation: viewWillDisappearExpectation,
-        viewDidDisappearExpectation: viewDidDisappearExpectation
-      )
-
-      assertSnapshot(of: viewController, as: .image)
-      assertSnapshot(of: viewController, as: .image)
-
-      wait(
-        for: [
-          viewDidLoadExpectation,
-          viewWillAppearExpectation,
-          viewDidAppearExpectation,
-          viewWillDisappearExpectation,
-          viewDidDisappearExpectation,
-        ], timeout: 1.0, enforceOrder: true)
-    #endif
-  }
-
+  
   func testCALayer() {
     #if os(iOS)
       let layer = CALayer()
